@@ -9,11 +9,13 @@
 </style>
 
 <h1>Charity List</h1>
-<pre>{charities}</pre>
+
 <ul>
-  <li>Satu</li>
-  <li>Dua</li>
-  <li>Tiga</li>
-  <li>Empat</li>
-  <li>Lima</li>
+  {#if charities != undefined}
+    {#each charities as charity}
+      <li>{charity.title} - {charities.category}</li>
+    {/each}
+  {:else}
+    <h1>Kosong</h1>
+  {/if}
 </ul>

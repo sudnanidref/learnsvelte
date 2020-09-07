@@ -1,11 +1,8 @@
 <script>
     import CharityList from "../components/Charity.svelte";
-    let title = "Hanrys";
-    setTimeout(() => {
-      title = "Kurniawan";
-    }, 5000);
+    import { charities } from "../data/charities.js";
 
-    let charities = ['One','Two','Three'];
+    let title = "Share the Bowl";
   </script>
   
   <style>
@@ -16,5 +13,5 @@
   </style>
   
   <h1>{title}</h1>
-  <CharityList {charities} />
+  <CharityList { charities } />
   
