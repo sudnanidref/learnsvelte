@@ -1,10 +1,27 @@
 <script>
+  import Modal from "./Modal.svelte";
   export let charities;
+
+  let modalStatus = false;
+
+  function openModal(){
+    modalStatus = true;
+  }
+
+  function closeModal(){
+    modalStatus = false;
+  }
 </script>
 
 <style>
   h1 {
     color: blue;
+  }
+
+  .show{
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
   }
 </style>
 
@@ -24,17 +41,15 @@
 
     <div class="row">
       <div class="col-lg-4 col-md-6">
-        <!-- modal goes here -->
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-          aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {#if modalStatus === true}
+        <Modal>
+        <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalLabel">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Splash Drone 3 a Fully Waterproof
-                  Drone thas
-                  floats</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="exampleModalLabel">{charity.title}</h5>
+                <button on:click={closeModal} type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -68,6 +83,8 @@
             </div>
           </div>
         </div>
+        </Modal>
+        {/if}
         <div class="xs-popular-item xs-box-shadow">
           <div class="xs-item-header">
 
@@ -82,11 +99,10 @@
           </div><!-- .xs-item-header END -->
           <div class="xs-item-content">
             <ul class="xs-simple-tag xs-mb-20">
-              <li><a href="">Food</a></li>
+              <li><a href="">{charity.category}</a></li>
             </ul>
 
-            <a class="xs-post-title xs-mb-30">Splash Drone 3 a Fully Waterproof Drone that
-              floats</a>
+            <a href="#" class="xs-post-title xs-mb-30">{charity.title}</a>
 
             <ul class="xs-list-with-content">
               <li>{charity.target}<span>Pledged</span></li>
@@ -108,10 +124,10 @@
 
             <span class="xs-separetor"></span>
 
-            <a href="#" data-toggle="modal" data-target="#exampleModal"
+            <button on:click={openModal} data-target="#exampleModal"
               class="btn btn-primary btn-block">
               Donate This Cause
-            </a>
+          </button>
           </div><!-- .xs-item-content END -->
         </div><!-- .xs-popular-item END -->
       </div>
