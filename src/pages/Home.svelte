@@ -23,4 +23,3 @@
 <Charity {charities} />
 <Promo />
 <Footer />
-<!-- <CharityList { charities } /> -->
