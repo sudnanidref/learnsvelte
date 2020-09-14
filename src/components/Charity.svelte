@@ -124,10 +124,10 @@
 
             <span class="xs-separetor"></span>
 
-            <button on:click={openModal} data-target="#exampleModal"
+            <a href="/donation/{charity.id}" on:click={openModal} data-target="#exampleModal"
               class="btn btn-primary btn-block">
               Donate This Cause
-          </button>
+          </a>
           </div><!-- .xs-item-content END -->
         </div><!-- .xs-popular-item END -->
       </div>
