@@ -1,18 +1,22 @@
 <script>
+  import { onMount } from "svelte";
   import Header from "../components/Header.svelte";
   import Footer from "../components/Footer.svelte";
-  import { charities } from "../data/charities";
 
   export let params;
   let data;
 
-  function getCharity(id) {
-    return charities.find(function (charity) {
-      return charity.id == parseInt(id);
-    });
+  async function getCharity(id) {
+    const res = await fetch(`https://charity-api-bwa.herokuapp.com/charities/${id}`);
+    console.log(res);
+    
+    return res.json();
   }
 
-  data = getCharity(params.id);
+  onMount(async function(){
+    data = await getCharity(params.id);
+  });
+  
 </script>
 
 <style>
