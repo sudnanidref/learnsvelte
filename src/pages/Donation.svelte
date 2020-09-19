@@ -1,22 +1,41 @@
 <script>
-  import { onMount } from "svelte";
+  import router from "page";
   import Header from "../components/Header.svelte";
   import Footer from "../components/Footer.svelte";
+  import Loader from "../components/Loader.svelte";
 
   export let params;
-  let data;
+  let amount, name, email;
+  let agree = false;
+  let data = getCharity(params.id);
 
   async function getCharity(id) {
-    const res = await fetch(`https://charity-api-bwa.herokuapp.com/charities/${id}`);
+    const res = await fetch(
+      `https://charity-api-bwa.herokuapp.com/charities/${id}`
+    );
     console.log(res);
-    
+
     return res.json();
   }
 
-  onMount(async function(){
-    data = await getCharity(params.id);
-  });
-  
+  async function handleForm(event) {
+    data.pledged = parseInt(data.pledged) + parseInt(amount);
+    try {
+      const res = await fetch(
+        `https://charity-api-bwa.herokuapp.com/charities/${params.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      router.redirect("/success");
+    } catch (err) {
+      console.log(err);
+    }
+  }
 </script>
 
 <style>
@@ -31,14 +50,16 @@
     margin: 0px;
     margin-left: 10px;
   }
-  .xs-donation-form-images{
+  .xs-donation-form-images {
     text-align: center;
   }
 </style>
 
 <Header />
 
-{#if data}
+{#await data}
+  <Loader />
+{:then charities}
   <!-- welcome section -->
   <!--breadcumb start here-->
   <section
@@ -48,7 +69,7 @@
     <div class="container">
       <div class="color-white xs-inner-banner-content">
         <h2>Donate Now</h2>
-        <p>{data.title}</p>
+        <p>{charities.title}</p>
         <ul class="xs-breadcumb">
           <li class="badge badge-pill badge-primary">
             <a href="index.html" class="color-white">Home /</a> Donate
@@ -67,7 +88,7 @@
           <div class="col-lg-6">
             <div class="xs-donation-form-images">
               <img
-                src="{data.thumbnail}"
+                src={charities.thumbnail}
                 class="img-responsive"
                 alt="Family Images" />
             </div>
@@ -75,7 +96,7 @@
           <div class="col-lg-6">
             <div class="xs-donation-form-wraper">
               <div class="xs-heading xs-mb-30">
-                <h2 class="xs-title">{data.title}</h2>
+                <h2 class="xs-title">{charities.title}</h2>
                 <p class="small">
                   To learn more about make donate charity with us visit our "<span
                     class="color-green">Contact us</span>" site. By calling <span
@@ -84,6 +105,7 @@
               </div>
               <!-- .xs-heading end -->
               <form
+                on:submit|preventDefault={handleForm}
                 action="#"
                 method="post"
                 id="xs-donation-form"
@@ -96,16 +118,20 @@
                     name="amount"
                     id="xs-donate-name"
                     class="form-control"
-                    placeholder="Minimum of $5" />
+                    required="true"
+                    placeholder="Your Donation"
+                    bind:value={amount} />
                 </div>
                 <div class="xs-input-group">
-                  <label for="xs-donate-name">Your Name <span class="color-light-red">**</span></label>
+                  <label for="xs-donate-name">Your Name<span class="color-light-red">**</span></label>
                   <input
                     type="text"
                     name="name"
                     id="xs-donate-name"
                     class="form-control"
-                    placeholder="Your Name" />
+                    placeholder="Your Name"
+                    required="true"
+                    bind:value={name} />
                 </div>
                 <div class="xs-input-group">
                   <label for="xs-donate-email">Email <span class="color-light-red">**</span></label>
@@ -114,16 +140,24 @@
                     name="email"
                     id="xs-donate-email"
                     class="form-control"
+                    required="true"
                     placeholder="Email" />
                 </div>
                 <!-- .xs-input-group END -->
                 <div class="xs-input-group" id="xs-input-checkbox">
-                  <input type="checkbox" name="agree" id="xs-donate-agree" />
+                  <input
+                    type="checkbox"
+                    name="agree"
+                    id="xs-donate-agree"
+                    bind:checked={agree} />
                   <label for="xs-donate-agree">I Agree <span class="color-light-red">**</span></label>
                 </div>
                 <!-- .xs-input-group END -->
-                <button type="submit" class="btn btn-warning"><span
-                    class="badge"><i class="fa fa-heart" /></span> Donate now</button>
+                <button
+                  type="submit"
+                  class="btn btn-warning"
+                  disabled={!agree}><span class="badge"><i
+                      class="fa fa-heart" /></span> Donate now</button>
               </form>
               <!-- .xs-donation-form #xs-donation-form END -->
             </div>
@@ -136,5 +170,5 @@
     <!-- End donation form section -->
   </main>
   <!-- footer section start -->
-{/if}
+{/await}
 <Footer />

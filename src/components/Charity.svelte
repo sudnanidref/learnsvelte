@@ -19,7 +19,8 @@
   function formatCurrency(nominal){
     return nominal.toLocaleString("id-ID",{
       style: "currency",
-      currency: "IDR"
+      currency: "IDR",
+      minimumFractionDigits: 0
     });
   }
 
@@ -43,7 +44,7 @@
   }
 
   .pledged{
-    margin-right: 3em;
+    margin-right: 2em;
   }
 </style>
 
@@ -167,7 +168,7 @@
               <a href="#" class="xs-post-title xs-mb-30">{charity.title}</a>
 
               <ul class="xs-list-with-content">
-                <li class="pledged">{formatCurrency(charity.target)}<span>Pledged</span></li>
+                <li class="pledged">{formatCurrency(charity.pledged)}<span>Pledged</span></li>
                 <li>
                   <span
                     class="number-percentage-count number-percentage"
@@ -182,10 +183,10 @@
 
               <div class="row xs-margin-0">
                 <div class="xs-round-avatar">
-                  <img src="assets/images/avatar/avatar_1.jpg" alt="" />
+                  <img src="{charity.profile_photo}" alt="" />
                 </div>
                 <div class="xs-avatar-title">
-                  <a href="#"><span>By</span>Ema Watson</a>
+                  <a href="#"><span>By</span>{charity.profile_name}</a>
                 </div>
               </div>
 
