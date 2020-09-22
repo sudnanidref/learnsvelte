@@ -7,19 +7,23 @@
   export let params;
   let amount, name, email;
   let agree = false;
-  let data = getCharity(params.id);
+  let charities = getCharity(params.id);
 
   async function getCharity(id) {
     const res = await fetch(
       `https://charity-api-bwa.herokuapp.com/charities/${id}`
     );
-    console.log(res);
-
-    return res.json();
+    const resData = await res.json();
+    return resData;
   }
 
   async function handleForm(event) {
+    let data = await getCharity(params.id);
     data.pledged = parseInt(data.pledged) + parseInt(amount);
+    console.log('sop');
+    console.log(data);
+    console.log('end sop');
+    
     try {
       const res = await fetch(
         `https://charity-api-bwa.herokuapp.com/charities/${params.id}`,
@@ -31,8 +35,25 @@
           body: JSON.stringify(data),
         }
       );
-      router.redirect("/success");
+
+      const resMid = await fetch("/.netlify/functions/payment", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          id: params.id,
+          name: name,
+          amount: parseInt(amount),
+          email: email,
+        }),
+      });
+      const midtransData = await resMid.json();
+      console.log(midtransData);
+      window.location.href = midtransData.url;
     } catch (err) {
+      console.log('masuk sini');
+      
       console.log(err);
     }
   }
@@ -57,7 +78,7 @@
 
 <Header />
 
-{#await data}
+{#await charities}
   <Loader />
 {:then charities}
   <!-- welcome section -->
