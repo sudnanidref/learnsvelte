@@ -1,17 +1,8 @@
 <script>
+  import { fly,fade,slide } from "svelte/transition";
   import { charities } from "../stores/data.js";
   import Modal from "./Modal.svelte";
   import Loader from "./Loader.svelte";
-
-  let modalStatus = false;
-
-  function openModal() {
-    modalStatus = true;
-  }
-
-  function closeModal() {
-    modalStatus = false;
-  }
 
   function fundedPercent(pledged, target) {
     return Math.floor((pledged / target) * 100);
@@ -68,90 +59,14 @@
 
     <div class="row">
       {#each $charities as charity}
-        <div class="col-lg-4 col-md-6">
-          {#if modalStatus === true}
-            <Modal>
-              <div
-                class="modal fade show"
-                id="exampleModal"
-                tabindex="-1"
-                role="dialog"
-                aria-labelledby="exampleModalLabel">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">
-                        {charity.title}
-                      </h5>
-                      <button
-                        on:click={closeModal}
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-
-                    <div class="modal-body">
-                      <form>
-                        <div class="form-group">
-                          <label for="exampleInputAmount">Amount donation</label>
-                          <input
-                            required
-                            type="number"
-                            class="form-control"
-                            id="exampleInputAmount"
-                            aria-describedby="amountHelp"
-                            placeholder="Enter amount" />
-                        </div>
-                        <div class="form-group">
-                          <label for="exampleInputName">Your name</label>
-                          <input
-                            required
-                            type="text"
-                            class="form-control"
-                            id="exampleInputName"
-                            aria-describedby="nameHelp"
-                            placeholder="Enter full name" />
-                        </div>
-                        <div class="form-group">
-                          <label for="exampleInputEmail1">Email address</label>
-                          <input
-                            required
-                            type="email"
-                            class="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
-                        </div>
-                        <div class="form-check">
-                          <input
-                            type="checkbox"
-                            class="form-check-input"
-                            id="exampleCheck1" />
-                          <label class="form-check-label" for="exampleCheck1">I
-                            Agree</label>
-                        </div>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-primary">Continue</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Modal>
-          {/if}
+        <div class="col-lg-4 col-md-6" in:slide={{ delay: 1000 }} out:slide={{ delay: 1000 }}>
           <div class="xs-popular-item xs-box-shadow">
             <div class="xs-item-header">
               <img src={charity.thumbnail} alt="" />
 
               <div class="xs-skill-bar">
-                <div class="xs-skill-track">
-                  <p>
+                <div class="xs-skill-track" style="width:{fundedPercent(charity.pledged, charity.target)}%">
+                  <p in:fly={{ delay: 3500, x: -100}} style="left:100%">
                     <span
                       class="number-percentage-count number-percentage"
                       data-value="90"
@@ -199,7 +114,6 @@
 
               <a
                 href="/donation/{charity.id}"
-                on:click={openModal}
                 data-target="#exampleModal"
                 class="btn btn-primary btn-block">
                 Donate This Cause

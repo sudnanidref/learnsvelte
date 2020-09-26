@@ -1,21 +1,28 @@
 <script>
-  import { charity, getCharity } from '../stores/data.js';
-  import { params } from '../stores/pages.js';
+  import { charity, getCharity } from "../stores/data.js";
+  import { params } from "../stores/pages.js";
 
   import router from "page";
   import Header from "../components/Header.svelte";
   import Footer from "../components/Footer.svelte";
   import Loader from "../components/Loader.svelte";
 
-  let amount, name, email;
+  let name, email;
+  let amountPercent = 0;
+  let amount = 0;
   let agree = false;
+
+  $: if($charity) {
+    amountPercent = (parseInt(amount) / $charity.target) * 100;
+    amountPercent = amountPercent.toFixed(2);
+  }
 
   getCharity($params.id);
 
   async function handleForm(event) {
     let data = await getCharity($params.id);
     data.pledged = parseInt(data.pledged) + parseInt(amount);
-    
+
     try {
       const res = await fetch(
         `https://charity-api-bwa.herokuapp.com/charities/${$params.id}`,
@@ -44,8 +51,8 @@
       console.log(midtransData);
       window.location.href = midtransData.url;
     } catch (err) {
-      console.log('masuk sini');
-      
+      console.log("masuk sini");
+
       console.log(err);
     }
   }
@@ -114,7 +121,9 @@
                   To learn more about make donate charity with us visit our "<span
                     class="color-green">Contact us</span>" site. By calling <span
                     class="color-green">+44(0) 800 883 8450</span>.
-                </p><span class="xs-separetor v2" />
+                </p>
+                <h5>Your charity in percent : { amountPercent } % </h5>
+                <span class="xs-separetor v2" />
               </div>
               <!-- .xs-heading end -->
               <form
