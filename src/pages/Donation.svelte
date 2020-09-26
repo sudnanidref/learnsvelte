@@ -1,32 +1,24 @@
 <script>
+  import { charity, getCharity } from '../stores/data.js';
+  import { params } from '../stores/pages.js';
+
   import router from "page";
   import Header from "../components/Header.svelte";
   import Footer from "../components/Footer.svelte";
   import Loader from "../components/Loader.svelte";
 
-  export let params;
   let amount, name, email;
   let agree = false;
-  let charities = getCharity(params.id);
 
-  async function getCharity(id) {
-    const res = await fetch(
-      `https://charity-api-bwa.herokuapp.com/charities/${id}`
-    );
-    const resData = await res.json();
-    return resData;
-  }
+  getCharity($params.id);
 
   async function handleForm(event) {
-    let data = await getCharity(params.id);
+    let data = await getCharity($params.id);
     data.pledged = parseInt(data.pledged) + parseInt(amount);
-    console.log('sop');
-    console.log(data);
-    console.log('end sop');
     
     try {
       const res = await fetch(
-        `https://charity-api-bwa.herokuapp.com/charities/${params.id}`,
+        `https://charity-api-bwa.herokuapp.com/charities/${$params.id}`,
         {
           method: "PUT",
           headers: {
@@ -42,7 +34,7 @@
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          id: params.id,
+          id: $params.id,
           name: name,
           amount: parseInt(amount),
           email: email,
@@ -78,9 +70,9 @@
 
 <Header />
 
-{#await charities}
+{#if !$charity.title}
   <Loader />
-{:then charities}
+{:else}
   <!-- welcome section -->
   <!--breadcumb start here-->
   <section
@@ -90,7 +82,7 @@
     <div class="container">
       <div class="color-white xs-inner-banner-content">
         <h2>Donate Now</h2>
-        <p>{charities.title}</p>
+        <p>{$charity.title}</p>
         <ul class="xs-breadcumb">
           <li class="badge badge-pill badge-primary">
             <a href="index.html" class="color-white">Home /</a> Donate
@@ -109,7 +101,7 @@
           <div class="col-lg-6">
             <div class="xs-donation-form-images">
               <img
-                src={charities.thumbnail}
+                src={$charity.thumbnail}
                 class="img-responsive"
                 alt="Family Images" />
             </div>
@@ -117,7 +109,7 @@
           <div class="col-lg-6">
             <div class="xs-donation-form-wraper">
               <div class="xs-heading xs-mb-30">
-                <h2 class="xs-title">{charities.title}</h2>
+                <h2 class="xs-title">{$charity.title}</h2>
                 <p class="small">
                   To learn more about make donate charity with us visit our "<span
                     class="color-green">Contact us</span>" site. By calling <span
@@ -191,5 +183,5 @@
     <!-- End donation form section -->
   </main>
   <!-- footer section start -->
-{/await}
+{/if}
 <Footer />

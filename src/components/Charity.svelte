@@ -1,6 +1,7 @@
 <script>
+  import { charities } from "../stores/data.js";
   import Modal from "./Modal.svelte";
-  export let charities;
+  import Loader from "./Loader.svelte";
 
   let modalStatus = false;
 
@@ -13,22 +14,22 @@
   }
 
   function fundedPercent(pledged, target) {
-    return Math.floor( (pledged / target) * 100 );
+    return Math.floor((pledged / target) * 100);
   }
 
-  function formatCurrency(nominal){
-    return nominal.toLocaleString("id-ID",{
+  function formatCurrency(nominal) {
+    return nominal.toLocaleString("id-ID", {
       style: "currency",
       currency: "IDR",
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     });
   }
 
-  function dateRemaining(date_end){
+  function dateRemaining(date_end) {
     const delta = date_end - new Date();
     const oneDay = 24 * 60 * 60 * 1000;
 
-    return Math.floor( delta / oneDay );
+    return Math.floor(delta / oneDay);
   }
 </script>
 
@@ -43,7 +44,7 @@
     z-index: 10000;
   }
 
-  .pledged{
+  .pledged {
     margin-right: 2em;
   }
 </style>
@@ -66,7 +67,7 @@
     <!-- .row end -->
 
     <div class="row">
-      {#each charities as charity}
+      {#each $charities as charity}
         <div class="col-lg-4 col-md-6">
           {#if modalStatus === true}
             <Modal>
@@ -154,7 +155,7 @@
                     <span
                       class="number-percentage-count number-percentage"
                       data-value="90"
-                      data-animation-duration="3500">{ fundedPercent(charity.pledged, charity.target) }</span>%
+                      data-animation-duration="3500">{fundedPercent(charity.pledged, charity.target)}</span>%
                   </p>
                 </div>
               </div>
@@ -168,7 +169,9 @@
               <a href="#" class="xs-post-title xs-mb-30">{charity.title}</a>
 
               <ul class="xs-list-with-content">
-                <li class="pledged">{formatCurrency(charity.pledged)}<span>Pledged</span></li>
+                <li class="pledged">
+                  {formatCurrency(charity.pledged)}<span>Pledged</span>
+                </li>
                 <li>
                   <span
                     class="number-percentage-count number-percentage"
@@ -176,14 +179,16 @@
                     data-animation-duration="3500">{fundedPercent(charity.pledged, charity.target)}</span>%
                   <span>Funded</span>
                 </li>
-                <li>{ dateRemaining(charity.date_end) }<span>Days to go</span></li>
+                <li>
+                  {dateRemaining(charity.date_end)}<span>Days to go</span>
+                </li>
               </ul>
 
               <span class="xs-separetor" />
 
               <div class="row xs-margin-0">
                 <div class="xs-round-avatar">
-                  <img src="{charity.profile_photo}" alt="" />
+                  <img src={charity.profile_photo} alt="" />
                 </div>
                 <div class="xs-avatar-title">
                   <a href="#"><span>By</span>{charity.profile_name}</a>
@@ -204,6 +209,8 @@
           </div>
           <!-- .xs-popular-item END -->
         </div>
+      {:else}
+        <Loader />
       {/each}
     </div>
     <!-- .row end -->
