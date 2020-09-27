@@ -20,6 +20,7 @@
   getCharity($params.id);
 
   async function handleForm(event) {
+    agree = false;
     let data = await getCharity($params.id);
     data.pledged = parseInt(data.pledged) + parseInt(amount);
 
