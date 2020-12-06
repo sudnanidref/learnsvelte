@@ -12,7 +12,7 @@
   let amount = 0;
   let agree = false;
 
-  $: if($charity) {
+  $: if ($charity) {
     amountPercent = (parseInt(amount) / $charity.target) * 100;
     amountPercent = amountPercent.toFixed(2);
   }
@@ -93,7 +93,8 @@
         <p>{$charity.title}</p>
         <ul class="xs-breadcumb">
           <li class="badge badge-pill badge-primary">
-            <a href="index.html" class="color-white">Home /</a> Donate
+            <a href="index.html" class="color-white">Home /</a>
+            Donate
           </li>
         </ul>
       </div>
@@ -120,10 +121,10 @@
                 <h2 class="xs-title">{$charity.title}</h2>
                 <p class="small">
                   To learn more about make donate charity with us visit our "<span
-                    class="color-green">Contact us</span>" site. By calling <span
-                    class="color-green">+44(0) 800 883 8450</span>.
+                    class="color-green">Contact us</span>" site. By calling
+                  <span class="color-green">+44(0) 800 883 8450</span>.
                 </p>
-                <h5>Your charity in percent : { amountPercent } % </h5>
+                <h5>Your charity in percent : {amountPercent} %</h5>
                 <span class="xs-separetor v2" />
               </div>
               <!-- .xs-heading end -->
@@ -135,7 +136,8 @@
                 class="xs-donation-form"
                 name="xs-donation-form">
                 <div class="xs-input-group">
-                  <label for="xs-donate-name">Donation Amount <span class="color-light-red">**</span></label>
+                  <label for="xs-donate-name">Donation Amount
+                    <span class="color-light-red">**</span></label>
                   <input
                     type="text"
                     name="amount"
@@ -146,7 +148,8 @@
                     bind:value={amount} />
                 </div>
                 <div class="xs-input-group">
-                  <label for="xs-donate-name">Your Name<span class="color-light-red">**</span></label>
+                  <label for="xs-donate-name">Your Name<span
+                      class="color-light-red">**</span></label>
                   <input
                     type="text"
                     name="name"
@@ -157,7 +160,8 @@
                     bind:value={name} />
                 </div>
                 <div class="xs-input-group">
-                  <label for="xs-donate-email">Email <span class="color-light-red">**</span></label>
+                  <label for="xs-donate-email">Email
+                    <span class="color-light-red">**</span></label>
                   <input
                     type="text"
                     name="email"
@@ -173,14 +177,16 @@
                     name="agree"
                     id="xs-donate-agree"
                     bind:checked={agree} />
-                  <label for="xs-donate-agree">I Agree <span class="color-light-red">**</span></label>
+                  <label for="xs-donate-agree">I Agree
+                    <span class="color-light-red">**</span></label>
                 </div>
                 <!-- .xs-input-group END -->
                 <button
                   type="submit"
                   class="btn btn-warning"
                   disabled={!agree}><span class="badge"><i
-                      class="fa fa-heart" /></span> Donate now</button>
+                      class="fa fa-heart" /></span>
+                  Donate now</button>
               </form>
               <!-- .xs-donation-form #xs-donation-form END -->
             </div>
@@ -193,5 +199,9 @@
     <!-- End donation form section -->
   </main>
   <!-- footer section start -->
+
+  <center>
+    <h1><a href="/donation/1">- Click Here Other Donation -</a></h1>
+  </center>
 {/if}
 <Footer />
